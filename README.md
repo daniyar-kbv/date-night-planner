@@ -2,6 +2,8 @@
 
 An interactive, mobile-first date invitation that turns a small romantic gesture into a playful flow and a shareable date ticket.
 
+Designed for mobile browsers and deployment on Cloudflare Workers.
+
 ![Date Night Planner preview](public/og.png)
 
 ## Current experience
