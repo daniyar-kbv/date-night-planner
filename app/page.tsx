@@ -65,6 +65,10 @@ export default function Home() {
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
   }, [stage]);
 
+  function dodgeNo() {
+    setNoMoves((moves) => Math.min(moves + 1, 4));
+  }
+
   function choosePrimary(id: ActivityId) {
     if (primaryActivity !== id) {
       setPrimaryActivity(id);
@@ -148,13 +152,28 @@ export default function Home() {
             <p className="lead">Хочу украсть тебя у всех дел и устроить вечер только для нас двоих.</p>
             <div className="answer-zone">
               <button className="primary" onClick={() => setStage('main')}>Да, с радостью 💗</button>
-              <button
-                className={`no-button move-${noMoves % 2}`}
-                onPointerEnter={() => noMoves === 0 && setNoMoves(1)}
-                onClick={() => noMoves === 0 ? setNoMoves(1) : setStage('later')}
-              >{noMoves ? 'Давай в другой день' : 'Нет'}</button>
+              {noMoves < 4 ? (
+                <button
+                  className={`no-button dodge-${noMoves}`}
+                  onPointerEnter={(event) => event.pointerType === 'mouse' && dodgeNo()}
+                  onPointerDown={(event) => {
+                    if (event.pointerType !== 'mouse') {
+                      event.preventDefault();
+                      dodgeNo();
+                    }
+                  }}
+                  onClick={(event) => {
+                    event.preventDefault();
+                    if (event.detail === 0) dodgeNo();
+                  }}
+                  aria-label="Нет — кнопка шутливо убегает"
+                >Нет</button>
+              ) : (
+                <button className="later-button" onClick={() => setStage('later')}>Давай в другой день</button>
+              )}
             </div>
-            {noMoves > 0 && <p className="tease">Хорошо, можно выбрать другой день — без обид 💗</p>}
+            {noMoves > 0 && noMoves < 4 && <p className="tease">Ой, кнопка снова убежала 😌</p>}
+            {noMoves === 4 && <p className="tease">Но честный ответ всегда можно дать 💗</p>}
           </div>
         )}
 
